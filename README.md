@@ -1,7 +1,3 @@
-That is fantastic news! I am thrilled to hear the local inference script worked well for you. Building a custom AI from scratch and running it with zero latency is a huge milestone for your graduation project.
-
-Since you are uploading this to GitHub, your `README.md` needs to look professional. It should explain *why* you chose this approach (TinyML over generic models like Vosk) and provide clear instructions so anyone (including your professors or future employers) can understand and run your code.
-
 Here is a complete, well-structured `README.md` file ready for you to copy and paste into your GitHub repository.
 
 ---
