@@ -14,7 +14,7 @@ Because the system controls a physical vehicle, it prioritizes **safety, ultra-l
 * **High Safety:** Rejects background noise and requires a strict confidence threshold to trigger wheelchair movements.
 
 ## 📂 Repository Structure
-* `Data_Collection_and_Training.ipynb`: A Google Colab notebook that uses a JavaScript bridge to record audio directly from your browser, saves it to Google Drive, extracts MFCC features, and trains a Convolutional Neural Network (CNN).
+* `model_generation.ipynb`: A Google Colab notebook that uses a JavaScript bridge to record audio directly from your browser, saves it to Google Drive, extracts MFCC features, and trains a Convolutional Neural Network (CNN).
 * `main.py`: The local PC inference script. It listens to the microphone in the background and runs real-time classification when a voice is detected.
 * `rafeeq_model.tflite`: The compressed, edge-ready neural network model.
 * `labels.txt`: The mapped vocabulary list (e.g., Move Forward, Stop, Turn Left).
@@ -36,7 +36,7 @@ The model is strictly constrained to the following commands to maximize accuracy
 
 ## 🚀 How to Recreate the Model (Google Colab)
 If you want to train this model on your own voice:
-1. Open the `Data_Collection_and_Training.ipynb` file in Google Colab.
+1. Open the `model_generation.ipynb` file in Google Colab.
 2. Run the first cell to mount your Google Drive.
 3. Use the integrated UI buttons to record 10-15 samples of each command. The script will automatically convert them to `16kHz, 16-bit Mono WAV` format using FFmpeg.
 4. Run the training cell. The script will extract **MFCCs (Mel Frequency Cepstral Coefficients)**, train a tiny CNN, and export a `rafeeq_model.tflite` file to your Drive.
