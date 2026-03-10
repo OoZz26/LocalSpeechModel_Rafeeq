@@ -1,8 +1,4 @@
-Here is a complete, well-structured `README.md` file ready for you to copy and paste into your GitHub repository.
 
----
-
-```markdown
 # 🧑‍🦽 Rafeeq Smart Wheelchair: Offline Voice Control (TinyML)
 
 This repository contains the custom **Voice Command Recognition System** built for "Rafeeq", a smart wheelchair designed for users with limited mobility. 
