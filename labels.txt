@@ -1,0 +1,11 @@
+go_to_bathroom
+go_to_bedroom
+go_to_kitchen
+go_to_livingroom
+move_backward
+move_forward
+rafeeq
+sleep
+stop
+turn_left
+turn_right
