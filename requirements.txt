@@ -1,0 +1,36 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Rafeeq Smart Wheelchair — Raspberry Pi 5 (Linux ARM64) runtime requirements
+# ─────────────────────────────────────────────────────────────────────────────
+# Install with:
+#   pip install -r requirements.txt
+#
+# Before running main.py, download the real whisper.cpp GGML model:
+#   bash whisper.cpp/models/download-ggml-model.sh base
+#   (use 'tiny' instead of 'base' for faster inference at the cost of accuracy)
+# ─────────────────────────────────────────────────────────────────────────────
+
+numpy>=1.23.0,<2.0        # tflite_runtime ARM wheels are compiled against NumPy 1.x
+pyaudio>=0.2.14
+librosa>=0.10.0
+soundfile>=0.12.1           # required by librosa for audio file I/O
+# numba is pulled in transitively by librosa — do NOT install coverage on the Pi.
+# Old numba + coverage < 7.0 → AttributeError: module 'coverage' has no attribute 'types'
+# Fix: pip uninstall coverage -y  (coverage is a dev/testing tool, not needed at runtime)
+
+# whisper.cpp Python bindings — compiles the C++ library from source at install.
+# Requires cmake and a C++ compiler:
+#   sudo apt install cmake build-essential
+pywhispercpp>=1.2.0
+
+# TFLite runtime for ARM (Layer 1 KWS + Layer 3 intent classifier).
+#
+# RECOMMENDED — ai_edge_litert is Google's official tflite_runtime replacement.
+#   It supports all modern op versions (Dense/FULLY_CONNECTED v12+) and is
+#   available for linux_aarch64 (Raspberry Pi 5) on PyPI:
+ai-edge-litert>=1.0.0
+#
+# FALLBACK — if ai_edge_litert is unavailable, use tflite_runtime >= 2.14.
+#   Versions < 2.14 crash with "Didn't find op for FULLY_CONNECTED version 12"
+#   when loading models exported from TensorFlow 2.14+.
+#   Uncomment the line below ONLY if ai_edge_litert fails:
+# tflite-runtime>=2.14.0

@@ -1,0 +1,30 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Rafeeq Smart Wheelchair — Windows / x86-64 development environment
+# ─────────────────────────────────────────────────────────────────────────────
+# Install with:
+#   pip install -r requirements-dev.txt
+#
+# WINDOWS-SPECIFIC NOTES
+# ──────────────────────
+# 1. tflite-runtime is not published for Windows on PyPI.
+#    Install ONE of the following alternatives:
+#      pip install ai-edge-litert        # TF 2.18+ drop-in replacement (recommended)
+#      pip install tensorflow            # full TensorFlow (large ~500 MB, works too)
+#
+# 2. PyAudio requires PortAudio, which is not bundled on Windows.
+#    Easiest options:
+#      conda install portaudio && pip install pyaudio
+#    OR
+#      pip install pipwin && pipwin install pyaudio
+#
+# 3. pywhispercpp compiles whisper.cpp on install — you need:
+#      cmake  : winget install Kitware.CMake
+#      MSVC   : Visual Studio Build Tools (C++ workload)
+#               OR: choco install mingw
+# ─────────────────────────────────────────────────────────────────────────────
+
+-r requirements.txt
+
+# Remove or comment out tflite-runtime above and use one of:
+# ai-edge-litert>=1.0.0
+# tensorflow>=2.14.0

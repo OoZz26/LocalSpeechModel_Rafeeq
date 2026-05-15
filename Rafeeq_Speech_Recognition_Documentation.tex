@@ -1,0 +1,819 @@
+\documentclass[12pt, a4paper]{report}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+% NOTE: Compile with XeLaTeX (required for Unicode Arabic text).
+%   Overleaf: Menu → Compiler → XeLaTeX
+%   Local:    xelatex Rafeeq_Speech_Recognition_Documentation.tex
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{fontspec}
+  \setmainfont{Latin Modern Roman}
+\usepackage{polyglossia}
+  \setmainlanguage{english}
+  \setotherlanguage{arabic}
+  \newfontfamily\arabicfont[Script=Arabic, Scale=1.1]{Amiri}
+% \textarabic{} is provided automatically by polyglossia (text<lang>{} pattern)
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{tocloft}
+\usepackage{mdframed}
+\usepackage{amsmath}
+\usepackage{caption}
+
+% ── Colours ───────────────────────────────────────────────────────────────────
+\definecolor{navyblue}{HTML}{1F3864}
+\definecolor{steelblue}{HTML}{2E75B6}
+\definecolor{lightblue}{HTML}{EBF3FB}
+\definecolor{codegray}{HTML}{F2F2F2}
+\definecolor{darkgray}{HTML}{404040}
+\definecolor{tableheader}{HTML}{1F3864}
+\definecolor{rowalt}{HTML}{EBF3FB}
+
+% ── Hyperref setup ────────────────────────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=steelblue,
+    urlcolor=steelblue,
+    citecolor=steelblue,
+    pdftitle={Rafeeq Speech Recognition Technical Documentation},
+    pdfauthor={Rafeeq Team — Zewail City},
+}
+
+% ── Section title formatting ──────────────────────────────────────────────────
+\titleformat{\chapter}[block]
+  {\normalfont\Large\bfseries\color{navyblue}}
+  {\thechapter.}{1em}{}
+  [\vspace{2pt}\color{steelblue}\titlerule]
+
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{navyblue}}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\color{steelblue}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{darkgray}}
+  {\thesubsubsection}{1em}{}
+
+\titlespacing*{\chapter}{0pt}{10pt}{20pt}
+\titlespacing*{\section}{0pt}{16pt}{8pt}
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+
+% ── Line spacing ──────────────────────────────────────────────────────────────
+\setstretch{1.15}
+
+% ── Code listing style ────────────────────────────────────────────────────────
+\lstdefinestyle{rafeeqcode}{
+    backgroundcolor=\color{codegray},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    frame=single,
+    framesep=4pt,
+    rulecolor=\color{steelblue},
+    xleftmargin=12pt,
+    xrightmargin=4pt,
+    aboveskip=8pt,
+    belowskip=8pt,
+    showstringspaces=false,
+    tabsize=2,
+    keywordstyle=\bfseries\color{navyblue},
+    commentstyle=\itshape\color{darkgray},
+    stringstyle=\color{steelblue},
+}
+\lstset{style=rafeeqcode}
+
+% ── Table helpers ─────────────────────────────────────────────────────────────
+\newcommand{\thead}[1]{%
+  \cellcolor{tableheader}\textcolor{white}{\textbf{#1}}}
+\newcommand{\trow}[1]{\rowcolor{rowalt}#1}
+\renewcommand{\arraystretch}{1.35}
+
+% ── Page header / footer ──────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{darkgray}\textit{Rafeeq Smart Wheelchair}}
+\fancyhead[R]{\small\color{darkgray}\textit{Speech Recognition — Technical Documentation}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{steelblue}\leaders\hrule height\headrulewidth\hfill}}
+
+% ── TOC formatting ────────────────────────────────────────────────────────────
+\renewcommand{\cftchapfont}{\bfseries\color{navyblue}}
+\renewcommand{\cftsecfont}{\color{darkgray}}
+\setlength{\cftbeforechapskip}{6pt}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+% ── COVER PAGE ────────────────────────────────────────────────────────────────
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+
+  {\fontsize{28}{34}\selectfont\bfseries\color{navyblue}
+    Rafeeq Smart Wheelchair\par}
+
+  \vspace{0.4cm}
+  {\color{steelblue}\rule{0.8\textwidth}{2pt}\par}
+  \vspace{0.4cm}
+
+  {\Large\bfseries\color{darkgray}
+    Speech Recognition Subsystem\par
+    Technical Documentation\par}
+
+  \vspace{0.6cm}
+  {\normalsize\itshape\color{darkgray}
+    Offline Arabic Voice Control: Design, Evaluation, and Architecture\par}
+
+  \vspace{2.5cm}
+
+  \begin{tabular}{rl}
+    \textbf{Project}      & Rafeeq (SmartWheel) \\[4pt]
+    \textbf{Institution}  & Zewail City of Science and Technology \\[4pt]
+    \textbf{Date}         & April 24, 2026 \\[4pt]
+    \textbf{Version}      & v1.0 \\
+  \end{tabular}
+
+  \vfill
+  {\color{steelblue}\rule{0.8\textwidth}{1pt}\par}
+  \vspace{0.3cm}
+  {\small\color{darkgray}
+    Submitted to: Dr.\ Moustafa Elshafei \& Dr.\ Ahmed Abd-Rabou\par}
+\end{titlepage}
+
+% ── TABLE OF CONTENTS ─────────────────────────────────────────────────────────
+\tableofcontents
+\newpage
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Overview}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\section{Purpose of This Document}
+
+This document provides a comprehensive technical reference for the speech recognition
+subsystem of the Rafeeq smart wheelchair. It covers the three architectures evaluated
+during development, the quantitative comparison that led to the final design decision,
+and a detailed breakdown of the selected architecture --- the local TFLite KWS model ---
+including its signal processing pipeline, neural network design, inference engine, and
+integration with the wheelchair control system.
+
+\section{System Context}
+
+The speech recognition subsystem converts the wheelchair user's spoken Egyptian Arabic
+commands into one of 11 discrete motion and navigation intents. It must operate:
+
+\begin{itemize}[noitemsep]
+  \item Completely offline (no internet connection at any time)
+  \item On a Raspberry Pi~5 with shared CPU resources (navigation, health monitoring,
+        and motor control also running concurrently)
+  \item Within safety-critical latency constraints ($<$100\,ms for motion commands)
+  \item With high reliability for short, single-word Egyptian dialect utterances
+\end{itemize}
+
+The 11 supported command intents are listed in Table~\ref{tab:intents}.
+
+\begin{table}[h!]
+\centering
+\caption{Supported wheelchair command intents}
+\label{tab:intents}
+\begin{tabular}{clc}
+\toprule
+\thead{Index} & \thead{Intent Label} & \thead{Action} \\
+\midrule
+\trow{1}  & \texttt{MOVE\_FORWARD}    & Move wheelchair forward \\
+2         & \texttt{MOVE\_BACKWARD}   & Move wheelchair backward \\
+\trow{3}  & \texttt{TURN\_LEFT}       & Turn left \\
+4         & \texttt{TURN\_RIGHT}      & Turn right \\
+\trow{5}  & \texttt{STOP}             & Emergency stop \\
+6         & \texttt{GO\_TO\_KITCHEN}  & Navigate to kitchen \\
+\trow{7}  & \texttt{GO\_TO\_BATHROOM} & Navigate to bathroom \\
+8         & \texttt{GO\_TO\_BEDROOM}  & Navigate to bedroom \\
+\trow{9}  & \texttt{GO\_TO\_LIVING\_ROOM} & Navigate to living room \\
+10        & \texttt{SPEED\_UP}        & Increase speed \\
+\trow{11} & \texttt{SLOW\_DOWN}       & Decrease speed \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Three Architectures Evaluated}
+% ═════════════════════════════════════════════════════════════════════════════
+
+Three fundamentally different approaches to offline Arabic speech recognition were
+built, deployed, and benchmarked on the target hardware (Raspberry Pi~5,
+ARM Cortex-A76, Ubuntu 24.04 LTS).
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Approach A --- Local TFLite KWS Model (MFCC + CNN)}
+% ─────────────────────────────────────────────────────────────────────────────
+
+A custom-trained Keyword Spotting (KWS) model based on Mel-Frequency Cepstral
+Coefficients (MFCC) feature extraction followed by a Convolutional Neural Network (CNN).
+The model is trained exclusively on the 11 wheelchair commands in Egyptian Arabic,
+exported as a TFLite binary, and runs in the \texttt{ai\_edge\_litert} inference engine.
+
+\textbf{Processing pipeline:}
+\begin{enumerate}[noitemsep]
+  \item Raw 16-bit PCM audio is captured in a 1.5-second sliding window at 16\,kHz
+  \item Audio is converted to a \texttt{float32} array and normalised to $[-1, 1]$
+  \item \texttt{librosa} extracts 13 MFCC coefficients across 47 time frames
+        $\rightarrow$ tensor shape \texttt{[1, 13, 47, 1]}
+  \item CNN model runs inference on the MFCC tensor
+  \item Softmax output over 11 classes $\rightarrow$ argmax gives the predicted command
+  \item A confidence threshold ($\geq 80\%$) must be met for the command to be accepted
+\end{enumerate}
+
+\begin{mdframed}[backgroundcolor=lightblue, linecolor=steelblue, linewidth=1pt]
+\textbf{Key metrics:} \quad
+Model size: \textbf{$\sim$100\,KB} \quad|\quad
+Latency: \textbf{$<$10\,ms} \quad|\quad
+CPU: \textbf{$<$2\%}
+\end{mdframed}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Approach B --- Vosk (Kaldi TDNN, Offline ASR)}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Vosk is an offline speech recognition library based on Kaldi's Time-Delay Neural
+Network (TDNN) acoustic model. It performs full speech-to-text transcription; a keyword
+matcher then maps the transcript to a command intent.
+
+\textbf{Processing pipeline:}
+\begin{enumerate}[noitemsep]
+  \item Continuous audio stream fed to the Vosk recogniser
+  \item Kaldi TDNN decodes audio into a text transcript (e.g.\ \textarabic{اطلع قدام})
+  \item Keyword matching maps the transcript to one of 11 intents
+\end{enumerate}
+
+\begin{mdframed}[backgroundcolor=lightblue, linecolor=steelblue, linewidth=1pt]
+\textbf{Key metrics:} \quad
+Model size: \textbf{$\sim$300\,MB} \quad|\quad
+Latency: \textbf{$\sim$120\,ms} \quad|\quad
+CPU: \textbf{35--45\%} \quad|\quad
+Accuracy: \textbf{94\%}
+\end{mdframed}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Approach C --- Hybrid (Whisper.cpp + BoW Intent Classifier)}
+% ─────────────────────────────────────────────────────────────────────────────
+
+A 3-layer hybrid pipeline combining a TinyML wake-word detector, Whisper.cpp (C++ port
+of OpenAI Whisper) for Arabic speech-to-text, and a Bag-of-Words (BoW) + Fully
+Connected TFLite classifier for intent mapping.
+
+\textbf{Layer breakdown:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Layer 1} --- Wake-word detector (TFLite CNN): always-on, detects
+        \textit{``rafeeq''} to activate the pipeline
+  \item \textbf{Layer 2} --- Whisper.cpp (\texttt{ggml-base.bin}): transcribes the
+        3-second command window to raw Arabic text
+  \item \textbf{Layer 3} --- BoW + FC TFLite classifier: maps Whisper transcript to
+        one of 11 intents
+\end{itemize}
+
+\begin{mdframed}[backgroundcolor=lightblue, linecolor=steelblue, linewidth=1pt]
+\textbf{Key metrics:} \quad
+Total size: \textbf{$\sim$210\,MB} \quad|\quad
+Latency: \textbf{2--3\,s} \quad|\quad
+CPU: \textbf{$\sim$80\%} \quad|\quad
+Accuracy: \textbf{Below target}
+\end{mdframed}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Comparative Analysis and Decision}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\section{Benchmarking Table}
+
+\begin{table}[h!]
+\centering
+\caption{Head-to-head comparison of all three architectures}
+\label{tab:comparison}
+\begin{tabularx}{\textwidth}{>{\bfseries}lXXX}
+\toprule
+\thead{Criterion} & \thead{Local KWS} & \thead{Vosk (Kaldi)} & \thead{Hybrid (Whisper)} \\
+\midrule
+\trow{Model Size}        & $\sim$100 KB   & $\sim$300 MB   & $\sim$210 MB \\
+Latency                  & $<$10 ms       & $\sim$120 ms   & 2,000--3,000 ms \\
+\trow{CPU Usage}         & $<$2\%         & 35--45\%       & $\sim$80\% \\
+Offline Operation        & Yes            & Yes            & Yes \\
+\trow{Short-cmd Accuracy}& High (direct)  & 94\%           & Below target \\
+Egyptian Dialect         & Custom-trained & Limited        & Good (general) \\
+\trow{Customisation}     & Full control   & Low            & Medium \\
+RAM Requirement          & $<$5 MB        & $\sim$300 MB   & $\sim$250 MB \\
+\trow{Safety Suitability}& \textbf{Excellent} & Acceptable & \textcolor{red}{\textbf{Unacceptable}} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Why the Local KWS Model Was Selected}
+
+Three factors drove the final decision:
+
+\subsection{Factor 1 --- Latency (Safety-Critical)}
+
+The wheelchair is a safety-critical system. A \texttt{STOP} command issued in an
+emergency must be acted upon in milliseconds, not seconds. The Hybrid Whisper approach
+requires 2--3 seconds --- an unacceptable delay. The local KWS model responds in under
+10\,ms, which is:
+
+\begin{center}
+\textbf{200$\times$ faster than Vosk \quad|\quad 300$\times$ faster than Hybrid Whisper}
+\end{center}
+
+\subsection{Factor 2 --- Resource Efficiency}
+
+The Raspberry Pi~5 runs four concurrent subsystems: navigation (SLAM + Nav2), health
+monitoring, motor control (serial UART), and speech recognition. Vosk's 35--45\% CPU
+usage and 300\,MB RAM footprint directly compete with the navigation stack. The local
+KWS model consumes less than 2\% CPU and only 100\,KB of storage ---
+\textit{effectively invisible to the rest of the system.}
+
+\subsection{Factor 3 --- Customisation for Egyptian Arabic}
+
+Both Vosk and Whisper are general-purpose ASR systems not optimised for short,
+single-word Egyptian colloquial commands. The local KWS model is trained
+\textbf{exclusively} on the exact 11 commands the wheelchair needs, in the exact
+dialect the patient uses. This domain-specific training gives higher reliability than
+any general-purpose ASR system.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Local KWS Model: Detailed Architecture}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\section{Full Pipeline Overview}
+
+\begin{lstlisting}[caption={Complete voice-to-command pipeline},
+                   label={lst:pipeline}]
+[Microphone - USB, 16 kHz, 16-bit PCM]
+        |
+        v
+[VAD Gate - RMS amplitude threshold]
+  RMS < 50  -->  discard chunk, keep listening
+  RMS >= 50 -->  start filling KWS window
+        |
+        v
+[1.5-second Audio Buffer - 24,000 samples @ 16 kHz]
+        |
+        v
+[Audio Preprocessing]
+  1. Convert int16 bytes --> float32, normalise to [-1, 1]
+  2. librosa.effects.trim(top_db=20) -- strip silence
+  3. Pad or truncate to exactly 24,000 samples
+        |
+        v
+[MFCC Feature Extraction - librosa]
+  n_mfcc    = 13 coefficients
+  n_fft     = 512  (32 ms window)
+  hop_length = 512
+  Output: (13, 47) --> reshape to [1, 13, 47, 1]
+        |
+        v
+[TFLite CNN Inference - rafeeq_model.tflite (~100 KB)]
+  Input:  [1, 13, 47, 1]  float32
+  Output: [1, 11]         float32 softmax probabilities
+        |
+        v
+[Confidence Gate - threshold >= 0.80]
+  confidence < 0.80  -->  UNKNOWN, return to idle
+  confidence >= 0.80 -->  accept command
+        |
+        v
+[Command Dispatch - 11 intents]
+  --> Serial UART to Arduino / Nav2 ROS2 goal
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Audio Capture and VAD Gate}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The \texttt{AudioRecorder} class maintains a persistent PyAudio stream at 16{,}000\,Hz
+mono 16-bit PCM, read in chunks of 512 frames ($\approx$32\,ms each).
+
+A Voice Activity Detection (VAD) gate based on RMS amplitude filters out silence before
+any DSP or ML work is performed:
+
+\begin{equation}
+  \mathrm{RMS} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} x_i^2}
+\end{equation}
+
+If $\mathrm{RMS} < \theta_{\mathrm{VAD}}$ (default: $\theta = 50$), the chunk is
+discarded and the loop iterates. This keeps CPU usage near zero during silence.
+
+When a volume spike is detected, a full 1.5-second window (47 chunks of 512 frames)
+is captured into a buffer before MFCC extraction begins.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{MFCC Feature Extraction}
+% ─────────────────────────────────────────────────────────────────────────────
+
+MFCC (Mel-Frequency Cepstral Coefficients) approximates how the human auditory system
+perceives sound by applying a mel-scale filterbank to the power spectrum. Extraction
+steps:
+
+\begin{enumerate}[noitemsep]
+  \item Trim leading/trailing silence: \texttt{librosa.effects.trim(top\_db=20)}
+  \item Pad or truncate audio to exactly 24{,}000 samples (1.5\,s at 16\,kHz)
+  \item Compute 13 MFCC coefficients:
+        \begin{itemize}[noitemsep]
+          \item \texttt{n\_fft = 512} (32\,ms analysis window)
+          \item \texttt{hop\_length = $\lfloor 16000 \times 1.5 / 47 \rfloor$}
+                $\rightarrow$ exactly 47 time frames
+        \end{itemize}
+  \item Pad/truncate the time axis to exactly 47 frames
+  \item Reshape to \texttt{[1, 13, 47, 1]} --- the model's expected input tensor
+\end{enumerate}
+
+The resulting tensor encodes the spectral envelope across 13 perceptual frequency bands
+over 47 time steps, covering the full 1.5-second command window.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Neural Network Architecture (CNN)}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The \texttt{rafeeq\_model.tflite} CNN processes the $[13 \times 47 \times 1]$ input as
+a 2-D image where the height axis represents frequency bands and the width axis
+represents time.
+
+\begin{lstlisting}[caption={KWS CNN architecture summary}]
+Input:  [1, 13, 47, 1]
+  --> Conv2D   (32 filters, 3x3, ReLU, padding=same)
+  --> MaxPool2D (2x2)
+  --> Conv2D   (64 filters, 3x3, ReLU, padding=same)
+  --> MaxPool2D (2x2)
+  --> Flatten
+  --> Dense    (128 units, ReLU)
+  --> Dropout  (0.25)
+  --> Dense    (11 units, Softmax)
+Output: [1, 11]  -- probability over 11 command classes
+\end{lstlisting}
+
+The model is exported with dynamic-range quantisation, reducing the binary to
+$\sim$100\,KB while preserving inference accuracy.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{TFLite Inference Engine}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The inference engine uses \texttt{ai\_edge\_litert} (Google's official replacement for
+the discontinued \texttt{tflite\_runtime}), providing:
+
+\begin{itemize}[noitemsep]
+  \item XNNPACK delegate for ARM NEON SIMD optimised operations on the Cortex-A76
+  \item Support for \texttt{FULLY\_CONNECTED} op version 12+ (unavailable in old
+        \texttt{tflite\_runtime})
+  \item Persistent interpreter with pre-allocated tensors (zero allocation overhead
+        per inference)
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption={TFLite inference flow}]
+interpreter = TFLiteInterpreter(model_path="rafeeq_model.tflite")
+interpreter.allocate_tensors()
+in_idx  = interpreter.get_input_details()[0]["index"]
+out_idx = interpreter.get_output_details()[0]["index"]
+
+interpreter.set_tensor(in_idx, mfcc_tensor)  # [1, 13, 47, 1]
+interpreter.invoke()                          # < 10 ms on RPi5
+probs      = interpreter.get_tensor(out_idx)[0]  # shape: (11,)
+best_idx   = int(np.argmax(probs))
+confidence = float(probs[best_idx])
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Confidence Threshold and Safety Gate}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{equation}
+  \text{command} =
+  \begin{cases}
+    \text{INTENT\_LABELS}[\text{argmax}(\mathbf{p})] & \text{if } \max(\mathbf{p}) \geq 0.80 \\
+    \text{UNKNOWN (ignored)}                          & \text{if } \max(\mathbf{p}) < 0.80
+  \end{cases}
+\end{equation}
+
+The 80\% threshold is a critical safety requirement. If the model is uncertain due to
+background noise, an unrecognised word, or ambiguous audio, it \textbf{must not} issue
+a movement command. It is safer to ask the user to repeat a command than to move in an
+unintended direction.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Label Set and Class Mapping}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{table}[h!]
+\centering
+\caption{KWS model output class mapping (loaded from \texttt{labels.txt})}
+\label{tab:labels}
+\begin{tabular}{clll}
+\toprule
+\thead{Index} & \thead{Label (labels.txt)} & \thead{Dispatch Key} & \thead{Action} \\
+\midrule
+\trow{0}  & \texttt{go\_to\_bathroom}   & \texttt{GO\_TO\_BATHROOM}   & Navigate to bathroom \\
+1         & \texttt{go\_to\_bedroom}    & \texttt{GO\_TO\_BEDROOM}    & Navigate to bedroom \\
+\trow{2}  & \texttt{go\_to\_kitchen}    & \texttt{GO\_TO\_KITCHEN}    & Navigate to kitchen \\
+3         & \texttt{go\_to\_livingroom} & \texttt{GO\_TO\_LIVING\_ROOM} & Navigate to living room \\
+\trow{4}  & \texttt{move\_backward}     & \texttt{MOVE\_BACKWARD}     & Move backward \\
+5         & \texttt{move\_forward}      & \texttt{MOVE\_FORWARD}      & Move forward \\
+\trow{6}  & \texttt{rafeeq}             & (wake-word activation)       & Opens command window \\
+7         & \texttt{sleep}              & (standby mode)               & System standby \\
+\trow{8}  & \texttt{stop}              & \texttt{STOP}               & \textbf{Emergency stop} \\
+9         & \texttt{turn\_left}         & \texttt{TURN\_LEFT}         & Turn left \\
+\trow{10} & \texttt{turn\_right}        & \texttt{TURN\_RIGHT}        & Turn right \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Note:} The \texttt{stop} class (index 8) bypasses all further processing and
+immediately dispatches the STOP command --- the shortest possible path from voice to
+motor halt.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Command Dispatcher}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{lstlisting}[language=Python, caption={Command dispatch routing}]
+handlers = {
+    "MOVE_FORWARD"     : _cmd_move_forward,      # Serial UART --> Arduino
+    "MOVE_BACKWARD"    : _cmd_move_backward,
+    "TURN_LEFT"        : _cmd_turn_left,
+    "TURN_RIGHT"       : _cmd_turn_right,
+    "STOP"             : _cmd_stop,              # Zero-velocity (safety-critical)
+    "GO_TO_KITCHEN"    : lambda: _cmd_navigate("kitchen"),    # Nav2 ROS2 goal
+    "GO_TO_BATHROOM"   : lambda: _cmd_navigate("bathroom"),
+    "GO_TO_BEDROOM"    : lambda: _cmd_navigate("bedroom"),
+    "GO_TO_LIVING_ROOM": lambda: _cmd_navigate("living_room"),
+    "SPEED_UP"         : _cmd_speed_up,
+    "SLOW_DOWN"        : _cmd_slow_down,
+}
+\end{lstlisting}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Layer 3: Intent Classifier (Text-Based --- Hybrid Pipeline)}
+% ═════════════════════════════════════════════════════════════════════════════
+
+A secondary text-based intent classifier (\texttt{text\_classifier.tflite}) was
+developed for the Hybrid pipeline's Layer 3. Though the Hybrid approach was not
+selected as the primary architecture, it is documented here for completeness.
+
+\section{Architecture}
+
+\begin{lstlisting}[caption={Layer 3 BoW + FC classifier pipeline}]
+Input:  Arabic text string (Whisper transcript)
+   |
+   v
+normalize_arabic(text)         -- 6-step normalisation
+   |
+   v
+Bag-of-Words vectorisation     -- 120-token vocabulary
+   |
+   v
+TFLite FC inference:
+  Dense(128, ReLU) --> Dropout(0.3)
+  --> Dense(64, ReLU) --> Dropout(0.2)
+  --> Dense(11, Softmax)
+   |
+   v
+Output: intent label + confidence score
+\end{lstlisting}
+
+\section{Arabic Text Normalisation Pipeline (6 Steps)}
+
+The \texttt{normalize\_arabic()} function ensures formal MSA and Egyptian colloquial
+variants of the same word map to the same vocabulary token:
+
+\begin{table}[h!]
+\centering
+\caption{Arabic normalisation steps}
+\label{tab:normalisation}
+\begin{tabularx}{\textwidth}{clX}
+\toprule
+\thead{Step} & \thead{Operation} & \thead{Example} \\
+\midrule
+\trow{1} & Remove diacritics (harakat) \& tatweel
+         & \textarabic{يمينًا} $\rightarrow$ \textarabic{يمينا} \\
+2 & Unify Alef variants (\textarabic{أ إ آ ٱ} $\rightarrow$ \textarabic{ا})
+  & \textarabic{للأمام} $\rightarrow$ \textarabic{للامام} \\
+\trow{3} & Unify Ya tail (\textarabic{ى} $\rightarrow$ \textarabic{ي})
+         & \textarabic{ابقى} $\rightarrow$ \textarabic{ابقي} \\
+4 & Unify Hamza seats (\textarabic{ؤ}$\rightarrow$\textarabic{و}, \textarabic{ئ}$\rightarrow$\textarabic{ي})
+  & --- \\
+\trow{5} & Strip punctuation, numbers, symbols & \textarabic{قدام!} $\rightarrow$ \textarabic{قدام} \\
+6 & Strip prefixes (\textarabic{بال لل ال في و}) --- longest first, $\geq$2 chars remain
+  & \textarabic{الحمام} $\rightarrow$ \textarabic{حمام} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Deployment: Dependency Resolution on Raspberry Pi~5}
+% ═════════════════════════════════════════════════════════════════════════════
+
+Three dependency conflicts were encountered and resolved during deployment on the
+Raspberry Pi~5 (Ubuntu 24.04 LTS, Python 3.10). These are documented for
+reproducibility.
+
+\begin{table}[h!]
+\centering
+\caption{Dependency conflicts and resolutions}
+\label{tab:deps}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\thead{Issue} & \thead{Root Cause} & \thead{Resolution} \\
+\midrule
+\trow{NumPy 2.2.6 crash}
+  & \texttt{tflite\_runtime} compiled against NumPy 1.x;
+    NumPy 2.0 restructured internal C API (\texttt{\_ARRAY\_API not found})
+  & Downgrade: \texttt{pip install "numpy>=1.23,<2.0"} \\
+\texttt{FULLY\_CONNECTED} op v12 not found
+  & Old \texttt{tflite\_runtime} only supports op $\leq$v11;
+    TF 2.14+ generates v12
+  & Migrate: \texttt{pip uninstall tflite-runtime \&\& pip install ai-edge-litert} \\
+\trow{\texttt{coverage.types} AttributeError}
+  & \texttt{numba} (used by librosa) imports \texttt{coverage} at load time;
+    system coverage 6.2 missing \texttt{.types} (added in v7.0)
+  & Shadow system pkg: \texttt{pip install "coverage>=7.0"} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Performance Summary}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\section{Final Performance on Raspberry Pi~5}
+
+\begin{table}[h!]
+\centering
+\caption{Local KWS model --- measured performance metrics}
+\label{tab:perf}
+\begin{tabular}{ll}
+\toprule
+\thead{Metric} & \thead{Value} \\
+\midrule
+\trow{Model binary size}           & $\sim$100 KB (\texttt{rafeeq\_model.tflite}) \\
+MFCC extraction time               & 8--15 ms (librosa, CPU) \\
+\trow{TFLite inference time}       & $<$10 ms (XNNPACK delegate, ARM NEON) \\
+Total pipeline latency             & $\sim$30--50 ms end-to-end \\
+\trow{CPU usage during inference}  & $<$2\% \\
+RAM footprint                      & $<$5 MB \\
+\trow{Confidence threshold}        & 80\% \\
+Supported commands                 & 11 \\
+\trow{Offline operation}           & Yes --- zero network dependency \\
+Audio input window                 & 1.5 s (post-VAD) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Model Size Comparison}
+
+\begin{table}[h!]
+\centering
+\caption{Full comparison across all three evaluated architectures}
+\label{tab:fullcomp}
+\begin{tabular}{lrrr}
+\toprule
+\thead{Metric} & \thead{Local KWS} & \thead{Vosk} & \thead{Hybrid Whisper} \\
+\midrule
+\trow{Storage footprint} & \textbf{100 KB}  & 300 MB  & 210 MB \\
+Latency                  & \textbf{$<$10 ms}& 120 ms  & 2,000--3,000 ms \\
+\trow{CPU usage}         & \textbf{$<$2\%}  & 35--45\%& $\sim$80\% \\
+RAM usage                & \textbf{$<$5 MB} & 300 MB  & 250 MB \\
+\trow{Short-cmd accuracy}& High             & 94\%    & Below target \\
+Dialect customisation    & Full             & Low     & Medium \\
+\trow{Safety suitability}& \textbf{Excellent}& Acceptable & \textcolor{red}{Unacceptable} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Files and Configuration Reference}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\section{Key Files}
+
+\begin{table}[h!]
+\centering
+\caption{Project file inventory}
+\label{tab:files}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\thead{File} & \thead{Size} & \thead{Description} \\
+\midrule
+\trow{\texttt{rafeeq\_model.tflite}}       & $\sim$100 KB & Layer 1 KWS CNN --- wake-word and command model \\
+\texttt{labels.txt}                         & $<$1 KB      & Class index $\rightarrow$ label mapping \\
+\trow{\texttt{text\_classifier.tflite}}    & $\sim$60 KB  & Layer 3 BoW+FC intent classifier (Hybrid) \\
+\texttt{metadata.json}                      & $\sim$5 KB   & Vocabulary list and label order for text classifier \\
+\trow{\texttt{main.py}}                    & $\sim$30 KB  & Full pipeline: recorder, KWS, classifier, dispatcher \\
+\texttt{requirements.txt}                   & $<$1 KB      & Pinned Pi~5 dependencies \\
+\trow{\texttt{text\_model\_creator.ipynb}} & $\sim$20 KB  & Colab notebook: dataset, training, TFLite export \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Key Configuration Constants}
+
+\begin{table}[h!]
+\centering
+\caption{Runtime configuration constants in \texttt{main.py}}
+\label{tab:constants}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\thead{Constant} & \thead{Default} & \thead{Description} \\
+\midrule
+\trow{\texttt{SAMPLE\_RATE}}             & 16{,}000 Hz     & Audio sample rate (must match training) \\
+\texttt{KWS\_WINDOW\_SECS}               & 1.5 s           & Audio buffer duration per KWS inference \\
+\trow{\texttt{KWS\_CONFIDENCE\_THRESH}}  & 0.80            & Minimum confidence for wake-word acceptance \\
+\texttt{INTENT\_CONFIDENCE\_THRESH}      & 0.80            & Minimum confidence for intent acceptance \\
+\trow{\texttt{VOLUME\_THRESHOLD}}        & 50              & Minimum RMS to pass the VAD gate \\
+\texttt{N\_MFCC}                         & 13              & Number of MFCC coefficients \\
+\trow{\texttt{KWS\_INPUT\_SHAPE}}        & [1,13,47,1]     & Model input tensor shape \\
+\texttt{COMMAND\_WINDOW\_SECS}           & 3 s             & Post-wake-word recording (Hybrid pipeline) \\
+\trow{\texttt{WHISPER\_LANGUAGE}}        & \texttt{"ar"}   & Language code for Whisper transcription \\
+\texttt{WHISPER\_MODEL\_SIZE}            & \texttt{"base"} & Whisper model size (tiny/base/small) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Next Steps}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\begin{enumerate}
+  \item \textbf{Real-user data collection} --- Record 50+ utterances per command from
+        actual Egyptian Arabic speakers to retrain the KWS model on real-world voice patterns.
+
+  \item \textbf{Motor control integration} --- Replace the stub \texttt{dispatch\_command()}
+        handlers with real serial UART commands to the Arduino Mega motor controller,
+        completing the voice-to-movement chain.
+
+  \item \textbf{Wake-word gate tuning} --- Calibrate \texttt{VOLUME\_THRESHOLD} and
+        \texttt{KWS\_CONFIDENCE\_THRESH} for the acoustic environment of the
+        June~1 demonstration venue.
+
+  \item \textbf{STOP command latency validation} --- Measure end-to-end latency from
+        start of \textarabic{وقف} utterance to motor zero-velocity command,
+        targeting $<$150\,ms total.
+
+  \item \textbf{Multi-user robustness testing} --- Validate accuracy across users with
+        different voice characteristics (male, female, elderly) and acoustic environments
+        (quiet room vs.\ background noise).
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\chapter{Glossary}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\begin{table}[h!]
+\centering
+\caption{Technical terms and definitions}
+\label{tab:glossary}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\thead{Term} & \thead{Definition} \\
+\midrule
+\trow{KWS}     & Keyword Spotting --- detecting a specific word/phrase in a continuous audio stream \\
+MFCC           & Mel-Frequency Cepstral Coefficients --- spectral audio features approximating human auditory perception \\
+\trow{TFLite}  & TensorFlow Lite --- lightweight ML inference framework for edge devices \\
+CNN            & Convolutional Neural Network --- deep learning architecture applying learnable filters to input tensors \\
+\trow{BoW}     & Bag-of-Words --- text encoded as a vector of word occurrence counts \\
+ASR            & Automatic Speech Recognition --- converting spoken audio to text \\
+\trow{VAD}     & Voice Activity Detection --- detecting speech presence before running the full model \\
+XNNPACK        & High-performance ARM neural network inference library used by TFLite as a delegate \\
+\trow{UART}    & Universal Asynchronous Receiver-Transmitter --- serial protocol between RPi5 and Arduino \\
+SLAM           & Simultaneous Localisation and Mapping --- building a map while tracking position \\
+\trow{Nav2}    & Navigation 2 --- the ROS2 navigation stack for autonomous path planning \\
+EKF            & Extended Kalman Filter --- sensor fusion algorithm combining odometry and IMU data \\
+\trow{FOC}     & Field-Oriented Control --- smooth, efficient BLDC motor control technique \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\vfill
+\begin{center}
+  {\color{steelblue}\rule{0.6\textwidth}{1pt}}\\[6pt]
+  {\small\color{darkgray}
+    Rafeeq (SmartWheel) Project \quad|\quad
+    Zewail City of Science and Technology \quad|\quad
+    April 2026}
+\end{center}
+
+\end{document}
